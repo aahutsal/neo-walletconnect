@@ -34,5 +34,4 @@ note top of (WalletConnectProvider): Sends customly crafted code changing `eth_*
 #+RESULTS:
 [[file:docs/research_infra.png]]
 
-
 It's how it looks to me now.
