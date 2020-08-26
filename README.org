@@ -13,22 +13,22 @@
        
 #+begin_src plantuml :file docs/research_infra.png :exports results
 together {
-cloud "NEO network" as NEONetwork {
+         cloud "NEO network" as NEONetwork {
 
-}
+         }
 
-node "WalletConnect" as WalletConnect {
+         node "WalletConnect" as WalletConnect {
 
-}
+         }
 
-[WalletConnectProvider] as WalletConnectProvider
+         [WalletConnectProvider] as WalletConnectProvider
  
-WalletConnectProvider --> NEONetwork: Sends requests
-NEONetwork --> WalletConnectProvider: Handles callbacks
-WalletConnectProvider --> WalletConnect
-WalletConnect --> WalletConnectProvider: Handles callbacks
+         WalletConnectProvider --> NEONetwork: Sends requests
+         NEONetwork --> WalletConnectProvider: Handles callbacks
+         WalletConnectProvider --> WalletConnect
+         WalletConnect --> WalletConnectProvider: Handles callbacks
 
-note top of (WalletConnectProvider): Sends customly crafted code changing `eth_*` methods\nto NEO netwok methods
+         note top of (WalletConnectProvider): Sends customly crafted code changing `eth_*` methods\nto NEO netwok methods
 }
 #+end_src
 #+RESULTS:
