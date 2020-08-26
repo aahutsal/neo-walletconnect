@@ -26,6 +26,7 @@ node "WalletConnect" as WalletConnect {
 WalletConnectProvider --> NEONetwork: Sends requests
 NEONetwork --> WalletConnectProvider: Handles callbacks
 WalletConnectProvider --> WalletConnect
+WalletConnect --> WalletConnectProvider: Handles callbacks
 
 note top of (WalletConnectProvider): Sends customly crafted code changing `eth_*` methods\nto NEO netwok methods
 }
