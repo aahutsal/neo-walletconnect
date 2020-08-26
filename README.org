@@ -9,7 +9,7 @@
     2. since I don't really consider #1 as an option (at least in scope of that project), there's another one. WalleConnect is EVM compatible (EVM stands to Ethereum Virtual Machine). Didn't found any information about NEO architecture, but I consider it's not EVM compatible. For better compatibility and future extensibility it's probably make sense to consider that option. But since this is also not what I've been hired for - there's another option
     3. To create `provider` module, that will just bring WalletConnect functionality to NEO network. 
        I've analyzed existing solutions and found, that guys from `Matic network` has done a great job and [[https://github.com/maticnetwork/walletconnect-provider][created such provider]] for Matic.
-       It's pretty straight forward and if we go that way, you will even save your budget. Basically that's a module, that connects to both WalletConnect and NEO network, overrides some Ethereum-native methods (e.g. `eth\_sign`, `eth\_signTransaction`, `eth\_sendTransaction` and such) and some callbacks (e.g. `onConnect`, `onDisconnect`). With call of `eth_*` method custom code just performs method name/parameters reamap calling native NEO network method. There could be more complicated use cases, but basically all custom job is done on our provider layer just sending native NEO calls to NEO network. 
+       It's pretty straight forward and if we go that way, you will even save your budget. Basically that's a module, that connects to both WalletConnect and NEO network, overrides some Ethereum-native methods (e.g. `eth_sign`, `eth_signTransaction`, `eth_sendTransaction` and such) and some callbacks (e.g. `onConnect`, `onDisconnect`). With call of `eth_*` method custom code just performs method name/parameters reamap calling native NEO network method. There could be more complicated use cases, but basically all custom job is done on our provider layer just sending native NEO calls to NEO network. 
        
 #+begin_src plantuml :file docs/research_infra.png :exports results
 together {
@@ -26,6 +26,7 @@ node "WalletConnect" as WalletConnect {
 WalletConnectProvider --> NEONetwork: Sends requests
 NEONetwork --> WalletConnectProvider: Handles callbacks
 WalletConnectProvider --> WalletConnect
+WalletConnect --> WalletConnectProvider: Handles callbacks
 
 note top of (WalletConnectProvider): Sends customly crafted code changing `eth_*` methods\nto NEO netwok methods
 }
