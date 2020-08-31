@@ -5,33 +5,94 @@
 
 * Solutions
 ** There are at the least 3 possible solutions
-    1. To create wNEO contract on Ethereum network (like ERC20 NEO) that would just held some NEO on NEO network establishing wNEO liquidity on Ethereum network. That's true, that WalletConnect and other tools could be used for Ethereum NEO only, but do you need to WalletConnect access to each and every NEO coin on your network?  At the first look it seems crazy, but [[https://news.bitcoin.com/ethereums-wrapped-bitcoin-set-to-eclipse-lightning-network-capacity/][just read that]]
-    2. since I don't really consider #1 as an option (at least in scope of that project), there's another one. WalletConnect is EVM compatible (EVM stands to Ethereum Virtual Machine). Didn't found any information about NEO architecture, but I consider it's not EVM compatible. For better compatibility and future extensibility it's probably make sense to consider that option. But since this is also not what I've been hired for - there's another option
-    3. To create `provider` module, that will just bring WalletConnect functionality to NEO network. 
+   Proposed solution is to create `provider` module, that will just bring WalletConnect functionality to NEO network. 
        I've analyzed existing solutions and found, that guys from `Matic network` has done a great job and [[https://github.com/maticnetwork/walletconnect-provider][created such provider]] for Matic.
        It's pretty straight forward and if we go that way, you will even save your budget. Basically that's a module, that connects to both WalletConnect and NEO network, overrides some Ethereum-native methods (e.g. `eth_sign`, `eth_signTransaction`, `eth_sendTransaction` and such) and some callbacks (e.g. `onConnect`, `onDisconnect`). With call of `eth_*` method custom code just performs method name/parameters re-map calling native NEO network method. There could be more complicated use cases, but basically all custom job is done on our provider layer just sending native NEO calls to NEO network. 
        
 #+begin_src plantuml :file docs/research_infra.png :exports results
 together {
-         cloud "NEO network" as NEONetwork {
+         cloud "NEO blockchain" as NEOBlockchain {
 
          }
 
-         node "WalletConnect" as WalletConnect {
+         node "WCBridgeServer" as WCBridgeServer {
 
          }
 
-         [WalletConnectProvider] as WalletConnectProvider
+         [WCBridgeServerProvider] as WCBridgeServerProvider
  
-         WalletConnectProvider --> NEONetwork: Sends requests
-         NEONetwork --> WalletConnectProvider: Handles callbacks
-         WalletConnectProvider --> WalletConnect
-         WalletConnect --> WalletConnectProvider: Handles callbacks
+         WCBridgeServerProvider --> NEOBlockchain: Sends requests
+         NEOBlockchain --> WCBridgeServerProvider: Handles callbacks
+         WCBridgeServerProvider --> WCBridgeServer
+         WCBridgeServer --> WalletConnectProvider: Handles callbacks
 
-         note top of (WalletConnectProvider): Sends customly crafted code changing `eth_*` methods\nto NEO netwok methods
+         note top of (WCBridgeServerProvider): Sends customly crafted code changing `eth_*` methods\nto NEO netwok methods
 }
 #+end_src
 #+RESULTS:
 [[file:docs/research_infra.png]]
 
-It's how it looks to me now.
+*** Establishing connection 
+Default WalletConnect [[https://eips.ethereum.org/EIPS/eip-1328][protocol implementation]] defines that:
+[[file:docs/establishing-connection-wc.png]]
+
+The second peer (Wallet) will read the URI using either a QR Code or a deep link. After reading the URI the peer will immediately receive and decrypt the connection request payload.
+
+The Wallet will then display to the user request details provided by the Dapp. The user will then approve or reject the connection. If rejected, the Dapp will disconnect from the Bridge Server immediately and throw an error message if provided by the Wallet. If approved, the Dapp will receive provided account and chainId from the Wallet.
+
+Once the connection is established, the Dapp will be able to send any JSON-RPC call requests to be handled by the Wallet either to read data from it's node or make signing requests for transactions or messages.
+
+[[file:docs/call-request-wc.png]]
+
+With WalletConnectProvider connection sequence turns into:
+#+begin_src plantuml :file docs/establishing-connection.png :exports results
+scale 1000 width
+  entity Dapp as DAPP
+  actor WalletConnectProvider as Provider #blue
+  entity "Bridge Server" as BS
+  entity Wallet as W
+  
+  DAPP -> Provider : Post Session Request
+  Provider -> BS : Transparently forwards Session Request to BS
+  BS -> W : Get Session Request
+  W --> BS : Post session status
+  BS --> Provider : Get Session status
+  Provider --> DAPP : Transparently forwards Session Request
+#+end_src
+#+RESULTS:
+[[file:docs/establishing-connection.png]]
+
+and method call sequence turns into:
+#+begin_src plantuml :file docs/establishing-connection.png :exports results
+scale 1000 width
+  entity Dapp as DAPP
+  actor WalletConnectProvider as Provider #blue
+  entity "Bridge Server" as BS
+  entity Wallet as W
+  
+  DAPP -> Provider : Sends JSON-RPC call request
+  Provider -> BS : Modifies call request
+  BS -> W : Forwards Call request
+  W --> BS : Method Invocation Response or Error
+  BS -> Provider : Modifies Method Invocation Response
+  Provider --> DAPP : Forwards result to caller
+#+end_src
+#+RESULTS:
+[[file:docs/establishing-connection.png]]
+
+
+*** JSON-RPC Methods
+    Complete set of Ethereum JSON-RPC methods are [[https://docs.walletconnect.org/json-rpc-api-methods/ethereum][listed here]]
+
+Looks like we should override all of them as each is used Ethereum based Signature. Here's the list of methods to be overriden
+
+- personal_sign
+- eth_sign
+- eth_signTypedData
+- eth_sendTransaction
+- eth_signTransaction
+- eth_sendRawTransaction
+
+```
+
+```
