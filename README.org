@@ -86,10 +86,14 @@ scale 1000 width
 
 Looks like we should override all of them as each is used Ethereum based Signature. Here's the list of methods to be overriden
 
-- `personal_sign`
-- `eth_sign`
-- `eth_signTypedData`
-- `eth_sendTransaction`
-- `eth_signTransaction`
-- `eth_sendRawTransaction`
+- *personal_sign*
+  The sign method calculates an Ethereum specific signature with:
+```
+sign(keccack256("\x19Ethereum Signed Message:\n" + len(message) + message)))
+```
+- *eth_sign*
+- *eth_signTypedData*
+- *eth_sendTransaction*
+- *eth_signTransaction*
+- *eth_sendRawTransaction*
 
