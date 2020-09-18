@@ -1,0 +1,3 @@
+[submodule "walletconnect-provider"]
+	path = walletconnect-provider
+	url = https://github.com/maticnetwork/walletconnect-provider.git
