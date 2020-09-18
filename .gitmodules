@@ -1,3 +1,6 @@
 [submodule "walletconnect-provider"]
 	path = walletconnect-provider
 	url = https://github.com/maticnetwork/walletconnect-provider.git
+[submodule "neo-node"]
+	path = neo-node
+	url = git@github.com:neo-project/neo-node.git
