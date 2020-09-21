@@ -16,7 +16,7 @@ together {
            NEO4 --> PGSQL: Connects to
          }
   [NEO Walletconnect Bridget] as NEOWalletconnect
-  NEOWalletconnect --> NEOBP
+  NEOWalletconnect --> NEOPB: Connects to [NEO1..NEO4] via Round-Robin or Random algos
 }
 #+end_src
 #+RESULTS:
