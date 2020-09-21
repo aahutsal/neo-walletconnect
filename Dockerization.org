@@ -15,6 +15,8 @@ together {
            NEO3 --> PGSQL: Connects to
            NEO4 --> PGSQL: Connects to
          }
+  [NEO Walletconnect Bridget] as NEOWalletconnect
+  NEOWalletconnect --> NEOBP
 }
 #+end_src
 #+RESULTS:
