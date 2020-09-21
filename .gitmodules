@@ -4,3 +4,6 @@
 [submodule "neo-node"]
 	path = neo-node
 	url = git@github.com:neo-project/neo-node.git
+[submodule "neo-scan-docker"]
+	path = neo-scan-docker
+	url = https://github.com/slipo/neo-scan-docker
