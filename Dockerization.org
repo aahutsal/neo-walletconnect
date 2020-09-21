@@ -4,6 +4,9 @@
     Project require Rrivate NEO Network for development and testing, since Private NEO Network itself consist of bunch of components it's hard and time-consuming to set them all up and running
 #+begin_src plantuml :file docs/NEOPB_implementation.png :exports results
 together {
+   package "NEO Scan" as NEOSCAN {
+         [NEO Scan Webapp] as NEOSCANWEB
+
          cloud "NEO Private Network" as NEOPB {
            [NEO Node1] as NEO1
            [NEO Node2] as NEO2
@@ -15,18 +18,23 @@ together {
            NEO3 --> PGSQL: Connects to
            NEO4 --> PGSQL: Connects to
          }
-  [NEO Walletconnect Bridget] as NEOWalletconnect
+         NEOSCANWEB --> NEOPB
+  }
+
+  [NEO Walletconnect Bridge] as NEOWalletconnect
   NEOWalletconnect --> NEOPB: Connects to [NEO1..NEO4] via Round-Robin or Random algos
 }
 #+end_src
 #+RESULTS:
 [[file:docs/NEOPB_implementation.png]]
+
+
 *** Solution
     All the components needed are wrapped with Docker images and run via `docker-compose`
 
 *** How to run
 #+BEGIN_SRC shell
-    cd neo-walletconect
+    cd neo-walletconnect
     docker-compose -f docker-compose.yml -f neo-scan-docker/docker-compose.yml
 #+END_SRC
 
