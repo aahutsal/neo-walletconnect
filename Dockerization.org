@@ -23,7 +23,8 @@ together {
     All the components needed are wrapped with Docker images and run via `docker-compose`
 
 *** How to run
-```
+#+BEGIN_SRC shell
     cd neo-walletconect
     docker-compose -f docker-compose.yml -f neo-scan-docker/docker-compose.yml
-```
+#+END_SRC
+
