@@ -1,7 +1,7 @@
 # Table of contents
 
 * The Problem
-    Since NEO network is rather new network, that would be reasonable to have all the infrastructure and tools, designed for Ethereum to be used with NEO network. Particular need is to use [[https://www.walletconnect.org][WalletConnect]] with NEO network
+  Since NEO network is rather new network, that would be reasonable to have all the infrastructure and tools, designed for Ethereum to be used with NEO network. Particular need is to use [[https://www.walletconnect.org][WalletConnect]] with NEO network
 
 * Solutions
 ** There are at the least 3 possible solutions

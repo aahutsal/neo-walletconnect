@@ -1,0 +1,29 @@
+* Dockerization
+
+*** The problem
+    Project require Rrivate NEO Network for development and testing, since Private NEO Network itself consist of bunch of components it's hard and time-consuming to set them all up and running
+#+begin_src plantuml :file docs/NEOPB_implementation.png :exports results
+together {
+         cloud "NEO Private Network" as NEOPB {
+           [NEO Node1] as NEO1
+           [NEO Node2] as NEO2
+           [NEO Node3] as NEO3
+           [NEO Node3] as NEO4
+           [PostgreSQL Server] as PGSQL
+           NEO1 --> PGSQL: Connects to
+           NEO2 --> PGSQL: Connects to
+           NEO3 --> PGSQL: Connects to
+           NEO4 --> PGSQL: Connects to
+         }
+}
+#+end_src
+#+RESULTS:
+[[file:docs/NEOPB_implementation.png]]
+*** Solution
+    All the components needed are wrapped with Docker images and run via `docker-compose`
+
+*** How to run
+```
+    cd neo-walletconect
+    docker-compose -f docker-compose.yml -f neo-scan-docker/docker-compose.yml
+```
