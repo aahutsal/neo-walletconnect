@@ -1,7 +1,7 @@
 * Dockerization
 
 *** The problem
-    Project require Rrivate NEO Network for development and testing, since Private NEO Network itself consist of bunch of components it's hard and time-consuming to set them all up and running
+    Project require Private NEO Network for development and testing, since Private NEO Network itself consists of bunch of components it's hard and time-consuming to set them all up and running
 #+begin_src plantuml :file docs/NEOPB_implementation.png :exports results
 together {
    package "NEO Scan" as NEOSCAN {
