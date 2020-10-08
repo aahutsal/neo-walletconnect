@@ -35,6 +35,6 @@ together {
 *** How to run
 #+BEGIN_SRC shell
     cd neo-walletconnect
-    docker-compose -f docker-compose.yml -f neo-scan-docker/docker-compose.yml
+    docker-compose -f docker-compose.yml -f neo-scan-docker/docker-compose.yml up
 #+END_SRC
 
